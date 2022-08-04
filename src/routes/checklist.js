@@ -2,6 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
+const Checklist = require("../models/checklist"); // importando o model checklist
+
 // rota GET
 router.get("/", (req, res) => {
   console.log("Olá");
@@ -9,9 +11,15 @@ router.get("/", (req, res) => {
 });
 
 // rota POST
-router.post("/", (req, res) => {
-  console.log(req.body);
-  res.status(200).send(req.body);
+router.post("/", async (req, res) => {
+  let { name } = req.body;
+
+  try {
+    let checklist = await Checklist.create({ name });
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(422).json(error);
+  }
 });
 
 // adicionando parâmetro na rota
