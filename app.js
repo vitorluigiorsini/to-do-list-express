@@ -18,6 +18,7 @@
 // });
 const express = require("express"); // importando o express
 const checkListRouter = require("./src/routes/checklist");
+require("./config/database");
 
 const app = express();
 app.use(express.json()); // usa o middleware json, que verifica se existe json na chamada e o deixa disponível no body
