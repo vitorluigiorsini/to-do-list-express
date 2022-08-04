@@ -39,15 +39,34 @@ router.get("/:id", async (req, res) => {
 });
 
 // rota PUT - atualizar
-router.put("/:id", (req, res) => {
-  console.log(req.body);
-  res.send(`PUT ID: ${req.params.id}`);
+router.put("/:id", async (req, res) => {
+  let { name } = req.body;
+  try {
+    let checklist = await Checklist.findByIdAndUpdate(
+      req.params.id,
+      { name },
+      { new: true } // exibir objeto atualizado
+    );
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(422).json(error);
+  }
+
+  // console.log(req.body);
+  // res.send(`PUT ID: ${req.params.id}`);
 });
 
 // rota DELETE - deletar
-router.delete("/:id", (req, res) => {
-  console.log(req.body);
-  res.send(`DELETE ID: ${req.params.id}`);
+router.delete("/:id", async (req, res) => {
+  try {
+    let checklist = await Checklist.findByIdAndRemove(req.params.id);
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(422).json(error);
+  }
+
+  // console.log(req.body);
+  // res.send(`DELETE ID: ${req.params.id}`);
 });
 
 module.exports = router;
