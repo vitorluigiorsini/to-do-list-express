@@ -27,6 +27,7 @@ require("./config/database"); // importando config do banco de dados
 
 const app = express(); // importa o express para o app
 app.use(express.json()); // usa o middleware json, que verifica se existe json na chamada e o deixa disponível no body
+app.use(express.urlencoded({ extended: true })); // middleware para disponibilizar dados do form
 
 app.use(express.static(path.join(__dirname, "public"))); // informa ao app que os arquivos estáticos ficarão na pasta public
 
