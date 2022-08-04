@@ -16,14 +16,23 @@
 // app.get("/json", (req, res) => {
 //   res.json({ title: "Tarefa X", done: true });
 // });
-const express = require("express"); // importando o express
-const checkListRouter = require("./src/routes/checklist");
-require("./config/database");
+const express = require("express"); // importando biblioteca express
+const path = require("path"); // setar caminho padrão
 
-const app = express();
+// importando rotas
+const checkListRouter = require("./src/routes/checklist");
+const rootRouter = require("./src/routes/index");
+
+require("./config/database"); // importando config do banco de dados
+
+const app = express(); // importa o express para o app
 app.use(express.json()); // usa o middleware json, que verifica se existe json na chamada e o deixa disponível no body
 
+app.set("views", path.join(__dirname, "src/views"));
+app.set("view engine", "ejs"); // configura app para usar o ejs
+
 app.use("/checklists", checkListRouter); // somente utilizar rotas que estão no checklists
+app.use("/", rootRouter);
 
 // ouvindo porta 3000
 app.listen(3000, () => {
