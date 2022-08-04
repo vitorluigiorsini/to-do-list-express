@@ -4,13 +4,17 @@ const router = express.Router();
 
 const Checklist = require("../models/checklist"); // importando o model checklist
 
-// rota GET
-router.get("/", (req, res) => {
-  console.log("Olá");
-  res.send();
+// rota GET - listar
+router.get("/", async (req, res) => {
+  try {
+    let checklists = await Checklist.find({});
+    res.status(200).json(checklists);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
-// rota POST
+// rota POST - inserir
 router.post("/", async (req, res) => {
   let { name } = req.body;
 
@@ -22,19 +26,25 @@ router.post("/", async (req, res) => {
   }
 });
 
-// adicionando parâmetro na rota
-router.get("/:id", (req, res) => {
-  console.log(req.body);
-  res.send(`ID: ${req.params.id}`);
+// adicionando parâmetro na rota - listar por id
+router.get("/:id", async (req, res) => {
+  try {
+    let checklist = await Checklist.findById(req.params.id);
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(422).json(error);
+  }
+  // console.log(req.body);
+  // res.send(`ID: ${req.params.id}`);
 });
 
-// rota PUT
+// rota PUT - atualizar
 router.put("/:id", (req, res) => {
   console.log(req.body);
   res.send(`PUT ID: ${req.params.id}`);
 });
 
-// rota DELETE
+// rota DELETE - deletar
 router.delete("/:id", (req, res) => {
   console.log(req.body);
   res.send(`DELETE ID: ${req.params.id}`);
