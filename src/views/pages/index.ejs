@@ -1,5 +1,7 @@
-<%- include('../layouts/header') %> // inclui a partial header, que se repete em todas as páginas
+<!-- passando parâmetro pelo ejs -->
+<%- include('../layouts/header', {title: 'Lista de Tarefas' }) %>
 
+  <!-- inclui a partial header, que se repete em todas as páginas -->
   <%- include('../layouts/menu') %>
 
     <section class="section hero is-link is-fullheight-with-navbar">
