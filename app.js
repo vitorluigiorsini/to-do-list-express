@@ -31,6 +31,7 @@ app.set("view engine", "ejs"); // configura app para usar o ejs
 app.use("/", rootRouter); // define caminho da rota root
 app.use("/checklists", checklistRouter); // define caminho das rotas dos checklists
 app.use("/checklists", taskRouter.checklistDependent);
+app.use("/tasks", taskRouter.simple);
 
 // define a porta em que o servidor será inicializado
 app.listen(3000, () => {

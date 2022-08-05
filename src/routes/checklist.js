@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const Checklist = require("../models/checklist"); // importa o model checklist
+const Task = require("../models/task");
 
 // rota GET - listar todas as checklists
 router.get("/", async (req, res) => {
@@ -84,6 +85,8 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     let checklist = await Checklist.findByIdAndRemove(req.params.id);
+    // teste para remover a lista junto com todas as suas tarefas
+    let tasks = await Task.deleteMany({ checklist: checklist });
     res.redirect("/checklists");
   } catch (error) {
     res

@@ -1,11 +1,13 @@
 const express = require("express");
+const checklist = require("../models/checklist");
 
-const checklistDependentRout = express.Router();
+const checklistDependentRoute = express.Router();
+const simpleRoute = express.Router();
 
 const Checklist = require("../models/checklist");
 const Task = require("../models/task");
 
-checklistDependentRout.get("/:id/tasks/new", async (req, res) => {
+checklistDependentRoute.get("/:id/tasks/new", async (req, res) => {
   try {
     let task = Task();
     res
@@ -14,11 +16,26 @@ checklistDependentRout.get("/:id/tasks/new", async (req, res) => {
   } catch (error) {
     res
       .status(422)
-      .render("pages/error", { errors: "Erro ao carregar o formulário" });
+      .render("pages/error", { error: "Erro ao carregar o formulário" });
   }
 });
 
-checklistDependentRout.post("/:id/tasks", async (req, res) => {
+simpleRoute.delete("/:id", async (req, res) => {
+  try {
+    let task = await Task.findByIdAndDelete(req.params.id);
+    let checklist = await Checklist.findById(task.checklist);
+    let taskToRemove = checklist.tasks.indexOf(task._id);
+    checklist.tasks.splice(taskToRemove, 1);
+    checklist.save();
+    res.redirect(`/checklists/${checklist._id}`);
+  } catch (error) {
+    res
+      .status(422)
+      .render("pages/error", { error: "Erro ao remover uma tarefa" });
+  }
+});
+
+checklistDependentRoute.post("/:id/tasks", async (req, res) => {
   let { name } = req.body.task;
   let task = new Task({ name, checklist: req.params.id });
   try {
@@ -36,4 +53,19 @@ checklistDependentRout.post("/:id/tasks", async (req, res) => {
   }
 });
 
-module.exports = { checklistDependent: checklistDependentRout };
+simpleRoute.put("/:id", async (req, res) => {
+  let task = await Task.findById(req.params.id);
+  try {
+    task.set(req.body.task);
+    await task.save();
+    res.status(200).json({ task });
+  } catch (error) {
+    let errors = error.errors;
+    res.status(422).json({ task: { ...errors } });
+  }
+});
+
+module.exports = {
+  checklistDependent: checklistDependentRoute,
+  simple: simpleRoute,
+};
