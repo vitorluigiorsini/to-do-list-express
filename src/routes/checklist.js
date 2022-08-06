@@ -5,7 +5,7 @@ const router = express.Router();
 const Checklist = require("../models/checklist"); // importa o model checklist
 const Task = require("../models/task");
 
-// rota GET - listar todas as checklists
+// rota GET - exibe todas as listas de tarefas
 router.get("/", async (req, res) => {
   try {
     let checklists = await Checklist.find({});
@@ -17,6 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// adiciona nova lista de tarefas
 router.get("/new", async (req, res) => {
   try {
     let checklist = new Checklist();
@@ -28,6 +29,7 @@ router.get("/new", async (req, res) => {
   }
 });
 
+// edita lista de tarefas
 router.get("/:id/edit", async (req, res) => {
   try {
     let checklist = await Checklist.findById(req.params.id);
@@ -39,7 +41,7 @@ router.get("/:id/edit", async (req, res) => {
   }
 });
 
-// rota POST - inserir nova checklist
+// rota POST - inseri nova lista de tarefas
 router.post("/", async (req, res) => {
   let { name } = req.body.checklist;
   let checklist = new Checklist({ name });
@@ -50,11 +52,11 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res
       .status(422)
-      .render("/checklists/new", { checklists: { ...checklist, error } });
+      .render("/checklists/new", { checklist: { ...checklist, error } });
   }
 });
 
-// passando parâmetro id - listar checklist do id informado
+// passando parâmetro id - exibe tarefas da lista de tarefas
 router.get("/:id", async (req, res) => {
   try {
     let checklist = await Checklist.findById(req.params.id).populate("tasks");
@@ -66,7 +68,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// rota PUT - atualizar
+// rota PUT - atualiza lista de tarefas
 router.put("/:id", async (req, res) => {
   let { name } = req.body.checklist;
   let checklist = await Checklist.findById(req.params.id);
@@ -81,7 +83,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// rota DELETE - deletar
+// rota DELETE - deleta lista de tarefas e suas respectivas tarefas
 router.delete("/:id", async (req, res) => {
   try {
     let checklist = await Checklist.findByIdAndRemove(req.params.id);
