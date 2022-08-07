@@ -9,7 +9,10 @@ const Task = require("../models/task");
 router.get("/", async (req, res) => {
   try {
     let checklists = await Checklist.find({});
-    res.status(200).render("checklists/index", { checklists: checklists });
+    let tasks = await Task.find({ done: true });
+    res
+      .status(200)
+      .render("checklists/index", { checklists: checklists, tasks: tasks });
   } catch (error) {
     res
       .status(500)
@@ -52,7 +55,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res
       .status(422)
-      .render("/checklists/new", { checklist: { ...checklist, error } });
+      .render("checklists/new", { checklist: { ...checklist, error } });
   }
 });
 

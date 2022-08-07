@@ -22,10 +22,30 @@
                     <%= checklist.name %>
                   </p>
                   <p class="subtitle is-size-6">
-                    <%= checklist.tasks.length %> tarefas
+                    <span>
+                      <%= checklist.tasks.length %>
+                        <% if(checklist.tasks.length==1) { %>
+                          <%= "tarefa |" %>
+                            <% } else { %>
+                              <%= "tarefas |" %>
+                                <% } %>
+                    </span>
+                    <span class="has-text-success">
+                      <% let taskDone=0; %>
+                        <% tasks.forEach( task=> { %>
+                          <% if(task.checklist==checklist.id) { %>
+                            <% taskDone+=1; } %>
+                              <% }) %>
+                                <%= taskDone %>
+                                  <% if(taskDone==1) { %>
+                                    <%= "concluída" %>
+                                      <% } else { %>
+                                        <%= "concluídas" %>
+                                          <% } %>
+                    </span>
                   </p>
                 </div>
-                <footer class="card-footer">
+                <footer class=" card-footer">
                   <p class="card-footer-item">
                     <span>
                       <a href="/checklists/<%= checklist._id %>">Ver</a>
